@@ -16,6 +16,7 @@ getSub(40, ['X', 'L']).
 getSub(10, ['X']).
 getSub(9, ['I', 'X']).
 getSub(5, ['V']).
+getSub(4, ['I', 'V']).
 getSub(1, ['I']).
 
 concat([], Lst2, Lst2).
@@ -39,8 +40,8 @@ intToRoman(Int, Result) :-
 	NewInt is Int - Min,
 	intToRoman(NewInt, PrevResult), !.
 
-?- false, romanToInt(['I', 'V'], Result),
+?- 0,romanToInt(['C', 'C', 'C', 'X', 'X', 'V', 'I'], Result),
 	write(Result), nl.
 
-?- intToRoman(189, Result),
+?- intToRoman(304, Result),
 	write(Result), nl.
