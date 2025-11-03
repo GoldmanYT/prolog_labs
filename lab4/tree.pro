@@ -1,30 +1,55 @@
-find(Target, Tree) :-
-	Tree =.. [_, Elem, Left, Right],
-	(
-		Target =:= Elem;
-		Target < Elem, find(Target, Left);
-		Target > Elem, find(Target, Right)
-	).
-
-?- Tree is tree(
-	7,
+tree(
+	14,
 	tree(
-		4,
+		8,
 		tree(
-			2,
-			tree(1, void, void),
-			tree(3, void, void)
+			4,
+			tree(2, void, void),
+			tree(6, void, void)
 		),
 		tree(
-			5,
+			10,
 			void,
-			tree(6, void, void)
+			tree(12, void, void)
 		)
 	),
 	tree(
-		8,
+		16,
 		void,
-		tree(9, void, void)
+		tree(18, void, void)
 	)
-),
-	find(5, Tree).
+).
+
+find(Target, tree(Target, _, _)) :- !.
+
+find(Target, tree(Elem, Left, Right)) :- 
+	Target < Elem, find(Target, Left), !;
+	Target > Elem, find(Target, Right).
+
+add(Target, Tree, Tree) :- find(Target, Tree), !.
+add(Target, void, tree(Target, void, void)) :- !.
+add(Target, tree(Elem, Left, Right), tree(Elem, ResLeft, Right)) :-
+	Target < Elem, add(Target, Left, ResLeft), !.
+add(Target, tree(Elem, Left, Right), tree(Elem, Left, ResRight)) :-
+	Target > Elem, add(Target, Right, ResRight), !.
+
+delete(Target, Tree, Tree) :- not(find(Target, Tree)), !.
+delete(Target, tree(Target, Left(LeftElem, ), Right), tree(void, Left, Right)) :- !.
+
+?- 0, tree(Elem, Left, Right),
+	find(4, tree(Elem, Left, Right)),
+	write("1. 4 was found"), nl.
+
+?- 0, tree(Elem, Left, Right),
+	find(5, tree(Elem, Left, Right)),
+	write("2. 5 was found"), nl.
+
+?- 0, tree(Elem, Left, Right),
+	add(5, tree(Elem, Left, Right), NewTree),
+	find(5, NewTree),
+	write("3. 5 was added"), nl.
+
+?- tree(Elem, Left, Right),
+	delete(14, tree(Elem, Left, Right), NewTree),
+	not(find(14, NewTree)),
+	write("4. 14 was deleted"), nl.
